@@ -15,6 +15,7 @@ package session
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"sync"
@@ -158,7 +159,11 @@ func (r *Recorder) Bytes() ([]byte, error) {
 		return nil, fmt.Errorf("marshaling header: %w", err)
 	}
 
-	result := make([]byte, 0, len(headerBytes)+1)
+	if len(headerBytes) > math.MaxInt-1 {
+		return nil, fmt.Errorf("header too large")
+	}
+	initialCap := len(headerBytes) + 1
+	result := make([]byte, 0, initialCap)
 	result = append(result, headerBytes...)
 	result = append(result, '\n')
 

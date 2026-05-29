@@ -712,7 +712,7 @@ var builtinRules = []*types.Rule{
 		Severity:    types.SeverityMedium,
 		Keywords:    []string{"discord.com/api/webhooks"},
 		Pattern: regexp.MustCompile(
-			`(https://discord(?:app)?\.com/api/webhooks/` +
+			`(^https://discord(?:app)?\.com/api/webhooks/` +
 				`[0-9]+/[a-zA-Z0-9\-_]+)`,
 		),
 		SecretGroup: 1,

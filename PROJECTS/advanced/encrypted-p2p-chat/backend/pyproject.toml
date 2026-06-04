@@ -20,10 +20,10 @@ dependencies = [
     "pydantic-settings>=2.12.0",
     "webauthn>=2.7.0",
     "fido2>=2.0.0",
-    "cryptography>=46.0.3",
+    "cryptography>=48.0.0",
     "pynacl>=1.6.1",
     "passlib>=1.7.4",
-    "python-multipart>=0.0.26",
+    "python-multipart>=0.0.27",
     "httpx>=0.28.1",
     "orjson>=3.11.4",
     "surrealdb>=1.0.6",
@@ -32,7 +32,7 @@ dependencies = [
 ]
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0.0",
+    "pytest>=9.0.3",
     "pytest-asyncio>=0.23.0",
     "aiosqlite>=0.20.0",
     "ruff>=0.8.0",

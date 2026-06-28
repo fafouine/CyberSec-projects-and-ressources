@@ -20,6 +20,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -356,11 +357,34 @@ func (s *Server) handleSessionReplay(
 		return
 	}
 
-	castPath := filepath.Join(
-		s.replayDir, fmt.Sprintf("%s.cast", id),
-	)
+	baseDirAbs, err := filepath.Abs(s.replayDir)
+	if err != nil {
+		s.writeError(
+			w, http.StatusInternalServerError, "invalid replay directory",
+		)
+		return
+	}
 
-	data, err := os.ReadFile(castPath)
+	castPath := filepath.Join(
+		baseDirAbs, fmt.Sprintf("%s.cast", id),
+	)
+	castPathAbs, err := filepath.Abs(castPath)
+	if err != nil {
+		s.writeError(
+			w, http.StatusBadRequest, "invalid replay path",
+		)
+		return
+	}
+
+	rel, err := filepath.Rel(baseDirAbs, castPathAbs)
+	if err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(os.PathSeparator)) || filepath.IsAbs(rel) {
+		s.writeError(
+			w, http.StatusBadRequest, "invalid session id",
+		)
+		return
+	}
+
+	data, err := os.ReadFile(castPathAbs)
 	if err != nil {
 		s.writeError(
 			w, http.StatusNotFound, "replay not found",
